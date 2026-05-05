@@ -13,11 +13,11 @@
 
     #menu {
       width: 260px;
-      padding: 15px;
+      padding: 12px;
       background: #1e1e1e;
       border-radius: 12px;
       color: white;
-      box-shadow: 0 0 15px #000;
+      box-shadow: 0 0 10px #000;
       display: flex;
       flex-direction: column;
     }
@@ -63,7 +63,7 @@
 
     .label-row {
       margin-top: 7px;
-      margin-bottom: 2px;
+      margin-bottom: 0px;
       font-size: 13px;
       color: #ccc;
     }
@@ -164,7 +164,6 @@
     </div>
 
     <div id="time" class="tab">
-  <div class="label-row">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Time (s)</div>
   <div class="input-row">
     <button onclick="SetTime()">Set Time</button>
     <input type="number" id="editTime" placeholder="0.0" step="0.01" value="0.0">
@@ -226,9 +225,6 @@
       <button id="alwaysSimBtn" onclick="ToggleAlwaysSim()">Always Sim (OFF)</button>
     </div>
 
-    <div id="menu-footer">
-      Made by McFlurry & The Big A
-    </div>
   </div>
 
   <script>
