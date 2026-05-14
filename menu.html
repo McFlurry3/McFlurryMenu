@@ -747,11 +747,11 @@
         alwaysWinFastBreakInterval = setInterval(function () {
           if (!timeAddress || !alwaysWinFastBreakAddress) return;
     
-          let currentTime = parseFloat(h5gg.getValue(timeAddress, "F64"));
+          let shotClockVal = parseFloat(h5gg.getValue(shotClockAddress, "F64"));
           let waveVal = parseInt(h5gg.getValue(alwaysWinFastBreakAddress, "I32"));
     
-          if (!isNaN(currentTime) && !isNaN(waveVal)) {
-            if (waveVal === 6 && currentTime > 4 && currentTime < 6) {
+          if (!isNaN(shotClockVal) && !isNaN(waveVal)) {
+            if (waveVal === 6 && shotClockVal > 4 && shotClockVal < 6) {
               InstantWinFlash();
               h5gg.setValue(alwaysWinFastBreakAddress, "0", "I32");
             }
@@ -1045,6 +1045,7 @@
       if (typeof setWindowDrag === "function") {
         setWindowDrag(0, 0, 300, 300);
         AutoScanTimeStatic();
+		getInstantAddress();
       }
     };
   </script>
