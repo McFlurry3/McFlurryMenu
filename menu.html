@@ -185,12 +185,15 @@
       <button id="possSwitchBtn" onclick="TogglePossessionSwitch()">Possession Switch (OFF)</button>
       <button id="alwaysYourBallBtn" onclick="ToggleAlwaysYourBall()">Always Your Ball (OFF)</button>
       <button id="end60Btn" onclick="EndGameAfter60s()">Rewind Quarters (OFF)</button>
-      <button id="alwaysWinRtcBtn" onclick="ToggleAlwaysWinRTC()">Always win RTC (OFF)</button>
-
-      <button id="tourneyEditBtn" class="full-button" onclick="showTab('tourney')">
-        Tourney Edit
-      </button>
+      <div class="freeze-grid">
+	  <button id="alwaysWinRtcBtn" onclick="ToggleAlwaysWinRTC()">Always win RTC (OFF)</button>
+      <button id="alwaysWinFastBreakBtn" onclick="ToggleAlwaysWinFastBreak()">Always Win FastBreak (OFF)</button>
     </div>
+
+	<button id="tourneyEditBtn" class="full-button" onclick="showTab('tourney')">
+      Tourney Edit
+	</button>
+  </div>
 
     <div id="dev" class="tab">
       <button id="scanCurryBtn" onclick="ScanForCurry()">Scan For Curry</button>
@@ -269,6 +272,10 @@
 
     let alwaysWinRTCEnabled = false;
     let alwaysWinRTCInterval = null;
+	
+	let alwaysWinFastBreakEnabled = false;
+	let alwaysWinFastBreakInterval = null;
+	let alwaysWinFastBreakAddress = null;
 
     const TIME_NOT_FOUND_ALERT = "Time address not found! Make sure to scan for time before using anything in the \"Time\" section or the \"Other\" section";
 
@@ -718,6 +725,45 @@
             h5gg.setValue(instantAddress, "-1", "I32");
           }
         }
+      }
+    }
+	
+	function ToggleAlwaysWinFastBreak() {
+	  alwaysWinFastBreakEnabled = !alwaysWinFastBreakEnabled;
+          const btn = document.getElementById("alwaysWinFastBreakBtn");
+
+      if (alwaysWinFastBreakEnabled) {
+        btn.textContent = "Always Win FastBreak (ON)";
+
+        if (!timeAddress) {
+          showTimeNotFoundAlert();
+          alwaysWinFastBreakEnabled = false;
+          btn.textContent = "Always Win FastBreak (OFF)";
+          return;
+        }
+
+        alwaysWinFastBreakAddress = "0x" + (Number(timeAddress) - 0x2F9DF10).toString(16);
+
+        alwaysWinFastBreakInterval = setInterval(function () {
+          if (!timeAddress || !alwaysWinFastBreakAddress) return;
+    
+          let currentTime = parseFloat(h5gg.getValue(timeAddress, "F64"));
+          let waveVal = parseInt(h5gg.getValue(alwaysWinFastBreakAddress, "I32"));
+    
+          if (!isNaN(currentTime) && !isNaN(waveVal)) {
+            if (waveVal === 6 && currentTime > 4 && currentTime < 6) {
+              InstantWinFlash();
+              h5gg.setValue(alwaysWinFastBreakAddress, "0", "I32");
+            }
+          }
+        }, 50);
+      } else {
+        btn.textContent = "Always Win FastBreak (OFF)";
+        if (alwaysWinFastBreakInterval) {
+          clearInterval(alwaysWinFastBreakInterval);
+          alwaysWinFastBreakInterval = null;
+        }
+        alwaysWinFastBreakAddress = null;
       }
     }
 
