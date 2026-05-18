@@ -197,7 +197,7 @@
 
     <div id="dev" class="tab">
       <button id="scanCurryBtn" onclick="ScanForCurry()">Scan For Curry</button>
-
+	  <button id="test1Btn" onclick="Test1()">TEST 1</button>
       <div class="dev-row">
         <button onclick="ChangeCard()">Change Card</button>
         <input type="number" id="cardValue" placeholder="Card ID">
@@ -980,6 +980,34 @@
       }
       h5gg.setValue(pwrAddress, String(val), "I32");
     }
+    
+    function Test1() {
+  let startAddr = prompt("Enter start addr:");
+  if (!startAddr) return;
+
+  let times = prompt("Enter how many times:");
+  if (times === null) return;
+
+  times = parseInt(times);
+  if (isNaN(times) || times < 1) {
+    alert("Enter a valid number of times.");
+    return;
+  }
+
+  let addrNum = Number(startAddr);
+  if (isNaN(addrNum)) {
+    alert("Enter a valid start address.");
+    return;
+  }
+
+  h5gg.require(7.8);
+
+  for (let i = 0; i < times; i++) {
+    let currentAddr = "0x" + addrNum.toString(16);
+    h5gg.setValue(currentAddr, "190", "I32");
+    addrNum += 0x180;
+  }
+}
 
     function ScanTourney() {
       let input = document.getElementById("tourneyTierInput").value;
