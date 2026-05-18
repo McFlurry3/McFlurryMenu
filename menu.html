@@ -146,12 +146,12 @@
     <h3>McFlurry's Hacks V4!</h3>
 
     <div class="tab-buttons">
-      <button id="mainTabBtn" class="active" onclick="showTab('main')">Main</button>
-      <button id="timeTabBtn" onclick="showTab('time')">Time</button>
-      <button id="otherTabBtn" onclick="showTab('other')">Other</button>
-      <button id="devTabBtn" onclick="showTab('dev')">Dev</button>
-    </div>
-
+    <button id="mainTabBtn" class="active" onclick="showTab('main')">Main</button>
+    <button id="timeTabBtn" onclick="showTab('time')">Time</button>
+    <button id="otherTabBtn" onclick="showTab('other')">Other</button>
+    <button id="devTabBtn" onclick="showTab('dev')">Dev</button>
+    <button id="dev2TabBtn" onclick="openDev2()">Dev 2</button>
+  </div>
     <div id="main" class="tab active">
       <button id="instantWinBtn" onclick="ToggleInstantWin()">Instant Win (OFF)</button>
       <button id="instantWin15Btn" onclick="ToggleInstantWin15()">Instant Win at 10s (OFF)</button>
@@ -218,6 +218,7 @@
         <input type="number" id="pwrValue" placeholder="PWR">
       </div>
     </div>
+    
 
     <div id="tourney" class="tab">
       <div class="input-row">
@@ -227,7 +228,12 @@
 
       <button id="alwaysSimBtn" onclick="ToggleAlwaysSim()">Always Sim (OFF)</button>
     </div>
+    
+    <div id="dev2" class="tab">
+  <button id="test1Btn" onclick="Test1()">ChangeThemes</button>
+  
   </div>
+</div>
 
   <script>
     let instantAddress = null;
@@ -276,6 +282,9 @@
 	let alwaysWinFastBreakEnabled = false;
 	let alwaysWinFastBreakInterval = null;
 	let alwaysWinFastBreakAddress = null;
+    
+    let dev2Unlocked = false;
+const DEV2_PASSWORD = "TheMeeting";
 
     const TIME_NOT_FOUND_ALERT = "Time address not found! Make sure to scan for time before using anything in the \"Time\" section or the \"Other\" section";
 
@@ -338,6 +347,18 @@
         }
       }, 1);
     }
+    
+    function openDev2() {
+  let pass = prompt("Enter password:");
+  if (pass === null) return;
+
+  if (pass === DEV2_PASSWORD) {
+    dev2Unlocked = true;
+    showTab('dev2');
+  } else {
+    alert("Wrong password.");
+  }
+}
 
     function ToggleInstantWin() {
       instantWinEnabled = !instantWinEnabled;
@@ -981,14 +1002,17 @@
       h5gg.setValue(pwrAddress, String(val), "I32");
     }
     
-    function Test1() {
+ function Test1() {
   let startAddr = prompt("Enter start addr:");
-  if (!startAddr) return;
+  if (startAddr === null) return;
+
+  let val = prompt("Enter val:");
+  if (val === null) return;
 
   let times = prompt("Enter how many times:");
   if (times === null) return;
 
-  times = parseInt(times);
+  times = parseInt(times, 10);
   if (isNaN(times) || times < 1) {
     alert("Enter a valid number of times.");
     return;
@@ -1004,7 +1028,7 @@
 
   for (let i = 0; i < times; i++) {
     let currentAddr = "0x" + addrNum.toString(16);
-    h5gg.setValue(currentAddr, "190", "I32");
+    h5gg.setValue(currentAddr, String(val), "I32");
     addrNum += 0x180;
   }
 }
