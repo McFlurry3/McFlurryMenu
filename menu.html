@@ -186,7 +186,7 @@
       <button id="alwaysYourBallBtn" onclick="ToggleAlwaysYourBall()">Always Your Ball (OFF)</button>
       <button id="end60Btn" onclick="EndGameAfter60s()">Rewind Quarters (OFF)</button>
       <div class="freeze-grid">
-	  <button id="alwaysWinRtcBtn" onclick="ToggleAlwaysWinRTC()">Always win RTC (OFF)</button>
+	  <button id="alwaysWinRtcBtn" onclick="ToggleAlwaysWinRTC()">Always Win RTC (OFF)</button>
       <button id="alwaysWinFastBreakBtn" onclick="ToggleAlwaysWinFastBreak()">Always Win FastBreak (OFF)</button>
     </div>
 
@@ -663,7 +663,7 @@ const DEV2_PASSWORD = "TheMeeting";
 
         if (didInstantWin) continue;
 
-        if (currentVal < 67 && quarterAddress) {
+        if (currentVal < 58 && quarterAddress) {
           let qValStr = h5gg.getValue(quarterAddress, "I32");
           let qVal = parseInt(qValStr);
           if (qVal !== 4) {
