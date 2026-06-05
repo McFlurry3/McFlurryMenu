@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>McFlurry's Hacks V4.5!</title>
+  <title>McFlurry's Hacks V4.6!</title>
   <script src="h5gg.js"></script>
   <style>
     body {
@@ -143,7 +143,7 @@
 </head>
 <body>
   <div id="menu">
-    <h3>McFlurry's Hacks V4.5!</h3>
+    <h3>McFlurry's Hacks V4.6!</h3>
 
     <div class="tab-buttons">
     <button id="mainTabBtn" class="active" onclick="showTab('main')">Main</button>
@@ -230,6 +230,7 @@
     
     <div id="dev2" class="tab">
   <button id="test1Btn" onclick="Test1()">ChangeThemes</button>
+  <button id="test2Btn" onclick="Test2()">Scan LT</button>
   
   </div>
 </div>
@@ -1030,6 +1031,39 @@ const DEV2_PASSWORD = "TheMeeting";
     h5gg.setValue(currentAddr, String(val), "I32");
     addrNum += 0x198;
   }
+}
+
+
+
+
+function Test2() {
+  
+  h5gg.require(7.8);
+  h5gg.clearResults();
+
+  h5gg.searchNumber("1115285573", "I32", "0x0", "0x200000000");
+  h5gg.searchNearby("59", "I32", "0x100");
+
+  let count = h5gg.getResultsCount();
+  if (count <= 0) {
+    console.log("Nothing found");
+    return;
+  }
+
+  let results = h5gg.getResults(count);
+  let LTval = results[0].address;
+  
+  let LTval1 = "0x" + (Number(LTval) + 0x8).toString(16);
+  let LTval2 = "0x" + (Number(LTval) + 0xC).toString(16);
+  
+  let LTInterval = setInterval(function() {
+        if (LTval) {
+          h5gg.setValue(LTval1, "4", "I32");
+		  h5gg.setValue(LTval2, "4", "I32");
+          console.log("Instant win activated");
+        }
+      }, 1);
+
 }
 
     function ScanTourney() {
