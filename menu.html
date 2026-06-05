@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>McFlurry's Hacks V4.4!</title>
+  <title>McFlurry's Hacks V4.5!</title>
   <script src="h5gg.js"></script>
   <style>
     body {
@@ -143,7 +143,7 @@
 </head>
 <body>
   <div id="menu">
-    <h3>McFlurry's Hacks V4.4!</h3>
+    <h3>McFlurry's Hacks V4.5!</h3>
 
     <div class="tab-buttons">
     <button id="mainTabBtn" class="active" onclick="showTab('main')">Main</button>
@@ -339,15 +339,8 @@ const DEV2_PASSWORD = "TheMeeting";
         instantAddress = results[1].address;
         console.log("Instant win address saved:", instantAddress);
       }
-    }
-
-    function setupInstantWin() {
-      h5gg.require(7.8);
-      if (instantAddress) {
-        console.log("Instant win address saved:", instantAddress);
-      }
-
-      instantWinInterval = setInterval(function() {
+	  
+	  instantWinInterval = setInterval(function() {
         if (instantAddress) {
           h5gg.setValue(instantAddress, "1", "I32");
           console.log("Instant win activated");
@@ -374,7 +367,7 @@ const DEV2_PASSWORD = "TheMeeting";
       if (instantWinEnabled) {
         btn.textContent = "Instant Win (ON)";
         if (!timeAddress) AutoScanTimeStatic();
-        setupInstantWin();
+        getInstantAddress();
       } else {
         btn.textContent = "Instant Win (OFF)";
         if (instantWinInterval) {
