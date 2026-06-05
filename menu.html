@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>McFlurry's Hacks V4.4!</title>
+  <title>McFlurry's Hacks V4.5!</title>
   <script src="h5gg.js"></script>
   <style>
     body {
@@ -143,7 +143,7 @@
 </head>
 <body>
   <div id="menu">
-    <h3>McFlurry's Hacks V4.4!</h3>
+    <h3>McFlurry's Hacks V4.5!</h3>
 
     <div class="tab-buttons">
     <button id="mainTabBtn" class="active" onclick="showTab('main')">Main</button>
@@ -328,22 +328,13 @@ const DEV2_PASSWORD = "TheMeeting";
     }
 
     function getInstantAddress() {
-      h5gg.require(7.8);
-      h5gg.clearResults();
-      h5gg.searchNumber("28743", "I32", "0x0", "0x200000000");
-      h5gg.searchNearby("-1", "I32", "0x100");
-      var count = h5gg.getResultsCount();
-      var results = h5gg.getResults(count);
-
-      if (count > 1) {
-        instantAddress = results[1].address;
-        console.log("Instant win address saved:", instantAddress);
-      }
-
+      if (!timeAddress) return null;
+      return "0x" + (Number(timeAddress) - 0x367D130).toString(16);
     }
 
     function setupInstantWin() {
       h5gg.require(7.8);
+      instantAddress = getInstantAddress();
       if (instantAddress) {
         console.log("Instant win address saved:", instantAddress);
       }
@@ -392,6 +383,7 @@ const DEV2_PASSWORD = "TheMeeting";
       if (!timeAddress) {
         AutoScanTimeStatic();
       }
+      instantAddress = getInstantAddress();
 
       if (!instantAddress) {
         alert("No instant win address found!");
@@ -425,7 +417,8 @@ const DEV2_PASSWORD = "TheMeeting";
           AutoScanTimeStatic();
         }
         if (!instantAddress) {
-            }
+          instantAddress = getInstantAddress();
+        }
 
         if (timeAddress && instantAddress) {
           let currentVal = parseFloat(h5gg.getValue(timeAddress, "F64"));
@@ -656,7 +649,8 @@ const DEV2_PASSWORD = "TheMeeting";
           let quarterVal = parseInt(quarterValStr);
           if (quarterVal === 4) {
             if (!instantAddress) {
-                    }
+              instantAddress = getInstantAddress();
+            }
 
             if (instantAddress) {
               h5gg.setValue(instantAddress, "1", "I32");
@@ -742,7 +736,8 @@ const DEV2_PASSWORD = "TheMeeting";
 
         if (quarterVal === 4 && currentVal >= 10.0 && currentVal <= 12.0) {
           if (!instantAddress) {
-                }
+            instantAddress = getInstantAddress();
+          }
 
           if (instantAddress) {
             h5gg.setValue(instantAddress, "1", "I32");
@@ -1023,7 +1018,7 @@ const DEV2_PASSWORD = "TheMeeting";
   }
 
   let addrNum = Number(startAddr);
-  if (isNaN(addrNum)) {0.
+  if (isNaN(addrNum)) {
     alert("Enter a valid start address.");
     return;
   }
