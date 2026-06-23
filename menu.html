@@ -345,7 +345,7 @@ const DEV2_PASSWORD = "TheMeeting";
     function setupInstantWin() {
       h5gg.require(7.8);
       
-      if (instantAddress) {
+      if (!instantAddress) {
         alert("Instant win address saved:" + instantAddress);
       }
 
