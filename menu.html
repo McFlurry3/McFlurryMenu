@@ -936,8 +936,8 @@ const DEV2_PASSWORD = "TheMeeting";
         let results = h5gg.getResults(1);
         if (results[0].value == 30306) {
           curryAddress = results[0].address;
-          themeAddress = "0x" + (Number(curryAddress) + 0xE0).toString(16);
-          tierAddress = "0x" + (Number(curryAddress) + 0xCC).toString(16);
+          themeAddress = "0x" + (Number(curryAddress) + 0x1C).toString(16);
+          tierAddress = "0x" + (Number(curryAddress) + 0xC).toString(16);
           pwrAddress = "0x" + (Number(curryAddress) + 0xE8).toString(16);
           alert(
             "Curry found.\n\n" +
