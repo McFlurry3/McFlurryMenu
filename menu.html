@@ -143,7 +143,7 @@
 </head>
 <body>
   <div id="menu">
-    <h3>McFlurry's Hacks V4.8!</h3>
+    <h3>McFlurry's Hacks V4.9!</h3>
 
     <div class="tab-buttons">
     <button id="mainTabBtn" class="active" onclick="showTab('main')">Main</button>
@@ -335,6 +335,8 @@ const DEV2_PASSWORD = "TheMeeting";
       h5gg.searchNearby("-1", "I32", "0x100");
       var count = h5gg.getResultsCount();
       var results = h5gg.getResults(count);
+
+	  alert("did ts");
 
       if (count > 1) {
         instantAddress = results[1].address;
