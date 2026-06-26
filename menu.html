@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>McFlurry's Hacks V4.9!</title>
+  <title>McFlurry's Hacks V5!</title>
   <script src="h5gg.js"></script>
   <style>
     body {
@@ -143,7 +143,7 @@
 </head>
 <body>
   <div id="menu">
-    <h3>McFlurry's Hacks V4.9!</h3>
+    <h3>McFlurry's Hacks V5!</h3>
 
     <div class="tab-buttons">
     <button id="mainTabBtn" class="active" onclick="showTab('main')">Main</button>
@@ -231,6 +231,7 @@
     <div id="dev2" class="tab">
   <button id="test1Btn" onclick="Test1()">ChangeThemes</button>
   <button id="test2Btn" onclick="Test2()">Scan LT</button>
+  <button id="findCardBtn" onclick="FindCard()">FindCard</button>
   
   </div>
 </div>
@@ -1068,6 +1069,61 @@ function Test2() {
         }
       }, 1);
 
+}
+
+function FindCard() {
+  let pos = prompt("Which position?");
+  if (pos === null) return;
+
+  pos = pos.trim().toUpperCase();
+
+  let searchVal = null;
+  let nearbyVal = null;
+
+  if (pos === "PG") {
+    searchVal = "5288477624507516752";
+    nearbyVal = "1224979098644774980";
+  } else if (pos === "SG") {
+    searchVal = "5288477624507516755";
+    nearbyVal = "1224979098644774980";
+  } else if (pos === "SF") {
+    searchVal = "5288477624507516499";
+    nearbyVal = "1224979098644774980";
+  } else if (pos === "PF") {
+    searchVal = "5288477624507516496";
+    nearbyVal = "1224979098644774980";
+  } else if (pos === "C") {
+    searchVal = "4920574510299832131";
+    nearbyVal = "1152921504606846976";
+  } else {
+    return;
+  }
+
+  h5gg.require(7.8);
+  h5gg.clearResults();
+
+  h5gg.searchNumber(searchVal, "I64", "0x0", "0x200000000");
+  h5gg.searchNearby(nearbyVal, "I64", "0x20");
+
+  let count = h5gg.getResultsCount();
+  if (count <= 0) {
+    alert("No result found.");
+    return;
+  }
+
+  let results = h5gg.getResults(1);
+  let baseAddr = results[0].address;
+  let finalAddr = "0x" + (BigInt(baseAddr) + 0x10n).toString(16);
+
+  let rawVal = h5gg.getValue(finalAddr, "I64");
+  let hexString = BigInt(rawVal).toString(16).toUpperCase();
+
+  let digits = [10, 8, 6, 4, 2].map(pos => {
+    let idx = pos - 1;
+    return idx >= 0 && idx < hexString.length ? hexString[idx] : "";
+  }).join("");
+
+  alert("Card code for " + pos + " in MyTeam: "  + digits);
 }
 
     function ScanTourney() {
