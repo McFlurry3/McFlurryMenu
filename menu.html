@@ -1072,58 +1072,48 @@ function Test2() {
 }
 
 function FindCard() {
-  let pos = prompt("Which position?");
-  if (pos === null) return;
-
-  pos = pos.trim().toUpperCase();
-
-  let searchVal = null;
-  let nearbyVal = null;
-
-  if (pos === "PG") {
-    searchVal = "5288477624507516752";
-    nearbyVal = "1224979098644774980";
-  } else if (pos === "SG") {
-    searchVal = "5288477624507516755";
-    nearbyVal = "1224979098644774980";
-  } else if (pos === "SF") {
-    searchVal = "5288477624507516499";
-    nearbyVal = "1224979098644774980";
-  } else if (pos === "PF") {
-    searchVal = "5288477624507516496";
-    nearbyVal = "1224979098644774980";
-  } else if (pos === "C") {
-    searchVal = "4920574510299832131";
-    nearbyVal = "1152921504606846976";
-  } else {
-    return;
-  }
+  const cases = [
+    ["PG", "5288477624507516752", "1224979098644774980"],
+    ["SG", "5288477624507516755", "1224979098644774980"],
+    ["SF", "5288477624507516499", "1224979098644774980"],
+    ["PF", "5288477624507516496", "1224979098644774980"],
+    ["C",  "4920574510299832131", "1152921504606846976"]
+  ];
 
   h5gg.require(7.8);
-  h5gg.clearResults();
+  let output = [];
 
-  h5gg.searchNumber(searchVal, "I64", "0x0", "0x200000000");
-  h5gg.searchNearby(nearbyVal, "I64", "0x20");
+  for (let i = 0; i < cases.length; i++) {
+    let pos = cases[i][0];
+    let searchVal = cases[i][1];
+    let nearbyVal = cases[i][2];
 
-  let count = h5gg.getResultsCount();
-  if (count <= 0) {
-    alert("No result found.");
-    return;
+    h5gg.clearResults();
+    h5gg.searchNumber(searchVal, "I64", "0x0", "0x200000000");
+    h5gg.searchNearby(nearbyVal, "I64", "0x20");
+
+    let count = h5gg.getResultsCount();
+    if (count <= 0) {
+      output.push(pos + ": ");
+      continue;
+    }
+
+    let results = h5gg.getResults(1);
+    let baseAddr = results[0].address;
+    let finalAddr = "0x" + (BigInt(baseAddr) + 0x10n).toString(16);
+
+    let rawVal = h5gg.getValue(finalAddr, "I64");
+    let hexString = BigInt(rawVal).toString(16).toUpperCase();
+
+    let digits = [10, 8, 6, 4, 2].map(p => {
+      let idx = p - 1;
+      return idx >= 0 && idx < hexString.length ? hexString[idx] : "";
+    }).join("");
+
+    output.push(pos + ": " + digits);
   }
 
-  let results = h5gg.getResults(1);
-  let baseAddr = results[0].address;
-  let finalAddr = "0x" + (BigInt(baseAddr) + 0x10n).toString(16);
-
-  let rawVal = h5gg.getValue(finalAddr, "I64");
-  let hexString = BigInt(rawVal).toString(16).toUpperCase();
-
-  let digits = [10, 8, 6, 4, 2].map(pos => {
-    let idx = pos - 1;
-    return idx >= 0 && idx < hexString.length ? hexString[idx] : "";
-  }).join("");
-
-  alert("Card code for " + pos + " in MyTeam: "  + digits);
+  alert(output.join("\n"));
 }
 
     function ScanTourney() {
