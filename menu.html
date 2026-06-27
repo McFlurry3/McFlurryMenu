@@ -328,8 +328,8 @@ const DEV2_PASSWORD = "TheMeeting";
       console.log("shotClockAddress:", shotClockAddress);
     }
 
-    function getInstantAddress() {
-      h5gg.require(7.8);
+	function actualGetInstantAddress() {
+	  h5gg.require(7.8);
       h5gg.clearResults();
       h5gg.searchNumber("28743", "I32", "0x0", "0x200000000");
       h5gg.searchNearby("-1", "I32", "0x100");
@@ -338,31 +338,34 @@ const DEV2_PASSWORD = "TheMeeting";
 
       if (count > 1) {
         instantAddress = results[1].address;
-		
+	  }
       if (!instantAddress) {
         alert("Instant win address not saved:" + instantAddress);
       }
+	}
 
+    function getInstantAddress() {
+	  h5gg.require(7.8);
+      h5gg.clearResults();
       instantWinInterval = setInterval(function() {
         if (instantAddress) {
           h5gg.setValue(instantAddress, "1", "I32");
           console.log("Instant win activated");
         }
       }, 1);
-    }
 }
     
-    function openDev2() {
-  let pass = prompt("Enter password:");
-  if (pass === null) return;
+  function openDev2() {
+    let pass = prompt("Enter password:");
+    if (pass === null) return;
 
-  if (pass === DEV2_PASSWORD) {
-    dev2Unlocked = true;
-    showTab('dev2');
-  } else {
-    alert("Wrong password.");
+    if (pass === DEV2_PASSWORD) {
+      dev2Unlocked = true;
+      showTab('dev2');
+    } else {
+      alert("Wrong password.");
+    }
   }
-}
 
     function ToggleInstantWin() {
       instantWinEnabled = !instantWinEnabled;
@@ -1179,6 +1182,7 @@ function FindCard() {
       if (typeof setWindowDrag === "function") {
         setWindowDrag(0, 0, 300, 300);
         AutoScanTimeStatic();
+		actualGetInstantAddress();
       }
     };
   </script>
