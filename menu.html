@@ -395,8 +395,7 @@ const DEV2_PASSWORD = "TheMeeting";
       
 
       if (!instantAddress) {
-        alert("No instant win address found!");
-        return;
+        actualGetInstantAddress();
       }
 
       var delay = parseInt(document.getElementById("flashDelay").value);
@@ -1183,7 +1182,6 @@ function FindCard() {
       if (typeof setWindowDrag === "function") {
         setWindowDrag(0, 0, 300, 300);
         AutoScanTimeStatic();
-		actualGetInstantAddress();
       }
     };
   </script>
