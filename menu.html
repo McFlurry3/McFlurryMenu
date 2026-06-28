@@ -143,7 +143,11 @@
 </head>
 <body>
   <div id="menu">
-    <h3>McFlurry's Hacks V5!</h3>
+    <div id="maintenanceBanner" style="display:none; text-align:center; color:#fff; font-size:12px; margin-top:8px; margin-bottom:6px;">
+    maintenance live! contact McFlurry for support
+  </div>
+
+  <h3 id="menuTitle">McFlurry's Hacks V5!</h3>
 
     <div class="tab-buttons">
     <button id="mainTabBtn" class="active" onclick="showTab('main')">Main</button>
@@ -282,6 +286,10 @@
 	let alwaysWinFastBreakEnabled = false;
 	let alwaysWinFastBreakInterval = null;
 	let alwaysWinFastBreakAddress = null;
+
+	let maintenanceMode = true;
+	let menuUnlocked = false;
+const DEV_PASSWORD = "TheMeeting";
     
     let dev2Unlocked = false;
 const DEV2_PASSWORD = "TheMeeting";
@@ -303,6 +311,40 @@ const DEV2_PASSWORD = "TheMeeting";
         tabBtn.classList.add('active');
       }
     }
+
+	  function showMaintenanceScreen() {
+  menuUnlocked = false;
+
+  document.getElementById("maintenanceBanner").style.display = "block";
+  document.getElementById("menuTitle").style.display = "block";
+  document.getElementById("menu").style.display = "flex";
+
+  document.querySelector(".tab-buttons").style.display = "none";
+  document.querySelectorAll(".tab").forEach(tab => tab.style.display = "none");
+  document.getElementById("menu-footer").style.display = "none";
+
+  setTimeout(function () {
+    let pass = prompt("Dev password");
+    if (pass === null) return;
+
+    if (pass === DEV_PASSWORD) {
+      maintenanceMode = false;
+      menuUnlocked = true;
+      showNormalMenu();
+    } else {
+      alert("Wrong password.");
+      showMaintenanceScreen();
+    }
+  }, 10);
+}
+
+function showNormalMenu() {
+  document.getElementById("maintenanceBanner").style.display = "none";
+  document.getElementById("menuTitle").style.display = "";
+  document.querySelector(".tab-buttons").style.display = "flex";
+  document.querySelectorAll(".tab").forEach(tab => tab.style.display = "none");
+  showTab("main");
+}
 
     function AutoScanTimeStatic() {
       h5gg.require(7.8);
@@ -1179,11 +1221,17 @@ function FindCard() {
     }
 
     window.onload = function () {
-      if (typeof setWindowDrag === "function") {
-        setWindowDrag(0, 0, 300, 300);
-        AutoScanTimeStatic();
-      }
-    };
+  if (typeof setWindowDrag === "function") {
+    setWindowDrag(0, 0, 300, 300);
+  }
+
+  if (maintenanceMode) {
+    showMaintenanceScreen();
+  } else {
+    showNormalMenu();
+    AutoScanTimeStatic();
+  }
+};
   </script>
 </body>
 </html>
