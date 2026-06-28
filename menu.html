@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>McFlurry's Hacks V5!</title>
+  <title>McFlurry's Hacks V5.1!</title>
   <script src="h5gg.js"></script>
   <style>
     body {
@@ -143,7 +143,7 @@
 </head>
 <body>
   <div id="menu">
-    <h3>McFlurry's Hacks V5!</h3>
+    <h3>McFlurry's Hacks V5.1!</h3>
 
     <div class="tab-buttons">
     <button id="mainTabBtn" class="active" onclick="showTab('main')">Main</button>
@@ -424,9 +424,9 @@ const DEV2_PASSWORD = "TheMeeting";
         if (!timeAddress) {
           AutoScanTimeStatic();
         }
-        if (!instantAddress) {
-          
-        }
+      if (!instantAddress) {
+        actualGetInstantAddress();
+      }
 
         if (timeAddress && instantAddress) {
           let currentVal = parseFloat(h5gg.getValue(timeAddress, "F64"));
@@ -656,9 +656,9 @@ const DEV2_PASSWORD = "TheMeeting";
           let quarterValStr = h5gg.getValue(quarterAddress, "I32");
           let quarterVal = parseInt(quarterValStr);
           if (quarterVal === 4) {
-            if (!instantAddress) {
-              
-            }
+             if (!instantAddress) {
+        	  actualGetInstantAddress();
+		    }
 
             if (instantAddress) {
               h5gg.setValue(instantAddress, "1", "I32");
@@ -743,9 +743,9 @@ const DEV2_PASSWORD = "TheMeeting";
         let quarterVal = parseInt(h5gg.getValue(quarterAddress, "I32"));
 
         if (quarterVal === 4 && currentVal >= 10.0 && currentVal <= 12.0) {
-          if (!instantAddress) {
-            
-          }
+           if (!instantAddress) {
+        	actualGetInstantAddress();
+      	  }
 
           if (instantAddress) {
             h5gg.setValue(instantAddress, "1", "I32");
