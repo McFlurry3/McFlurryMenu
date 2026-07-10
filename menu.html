@@ -368,17 +368,22 @@ const DEV2_PASSWORD = "TheMeeting";
   }
 
     function ToggleInstantWin() {
-	
-	  if (!instantAddress) {
-        actualGetInstantAddress();
-      }
+
+	  actualGetInstantAddress();
 	  
       instantWinEnabled = !instantWinEnabled;
       const btn = document.getElementById("instantWinBtn");
 
       if (instantWinEnabled) {
         btn.textContent = "Instant Win (ON)";
-        if (!timeAddress) AutoScanTimeStatic();
+        if (!timeAddress) { 
+		  AutoScanTimeStatic();
+		}
+
+		if (!instantAddress) {
+          actualGetInstantAddress();
+        }
+		
 		getInstantAddress();
       } else {
         btn.textContent = "Instant Win (OFF)";
