@@ -379,6 +379,7 @@ const DEV2_PASSWORD = "TheMeeting";
       if (instantWinEnabled) {
         btn.textContent = "Instant Win (ON)";
         if (!timeAddress) AutoScanTimeStatic();
+		getInstantAddress();
       } else {
         btn.textContent = "Instant Win (OFF)";
         if (instantWinInterval) {
