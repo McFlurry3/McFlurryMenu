@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>McFlurry's Hacks V5.7!</title>
+  <title>McFlurry's Hacks V5.6!</title>
   <script src="h5gg.js"></script>
   <style>
     body {
@@ -143,7 +143,7 @@
 </head>
 <body>
   <div id="menu">
-    <h3>McFlurry's Hacks V5.7!</h3>
+    <h3>McFlurry's Hacks V5.6!</h3>
 
     <div class="tab-buttons">
     <button id="mainTabBtn" class="active" onclick="showTab('main')">Main</button>
@@ -229,10 +229,11 @@
       <button id="alwaysSimBtn" onclick="ToggleAlwaysSim()">Always Sim (OFF)</button>
     </div>
     
-    <div id="dev2" class="tab">
+        <div id="dev2" class="tab">
   <button id="test1Btn" onclick="Test1()">Change Themes</button>
   <button id="test2Btn" onclick="Test2()">LTourneys</button>
   <button id="change4rummyBtn" onclick="Change4Rummy()">Change4Rummy</button>
+  <button id="equipAllTeamBtn" onclick="EquipAllTeam()">EquipAllTeam</button>
   </div>
 </div>
 
@@ -1135,6 +1136,86 @@ function Change4Rummy() {
 
   console.log("Change4Rummy complete. Total addresses changed: " + changedTotal);
   alert("Change4Rummy done.\nTotal addresses changed: " + changedTotal);
+}
+
+	  function EquipAllTeam() {
+  // Same team-scan table as FindCard.
+  const cases = [
+    ["PG", "5288477624507516752", "1224979098644774980"],
+    ["SG", "5288477624507516755", "1224979098644774980"],
+    ["SF", "5288477624507516499", "1224979098644774980"],
+    ["PF", "5288477624507516496", "1224979098644774980"],
+    ["C",  "4920574510299832131", "1152921504606846976"]
+  ];
+
+  let input = prompt("Enter value to set all team codes to (e.g. 31545 or 30306):");
+  if (input === null) return;
+  let targetVal = String(input.trim());
+  if (targetVal === "" || isNaN(parseInt(targetVal, 10))) {
+    alert("Enter a valid number.");
+    return;
+  }
+
+  h5gg.require(7.8);
+
+  let changedTotal = 0;
+  let report = [];
+
+  for (let i = 0; i < cases.length; i++) {
+    let pos = cases[i][0];
+    let searchVal = cases[i][1];
+    let nearbyVal = cases[i][2];
+
+    // --- Step 1: run the team scan exactly like FindCard to get the 5-digit code ---
+    h5gg.clearResults();
+    h5gg.searchNumber(searchVal, "I64", "0x0", "0x200000000");
+    h5gg.searchNearby(nearbyVal, "I64", "0x20");
+
+    let teamCount = h5gg.getResultsCount();
+    if (teamCount <= 0) {
+      report.push(pos + ": no team base found");
+      continue;
+    }
+
+    let teamResults = h5gg.getResults(1);
+    let baseAddr = teamResults[0].address;
+    let finalAddr = "0x" + (BigInt(baseAddr) + 0x10n).toString(16);
+
+    let rawVal = h5gg.getValue(finalAddr, "I64");
+    let hexString = BigInt(rawVal).toString(16).toUpperCase();
+
+    let code = [10, 8, 6, 4, 2].map(p => {
+      let idx = p - 1;
+      return idx >= 0 && idx < hexString.length ? hexString[idx] : "";
+    }).join("");
+
+    // --- Step 2: nearby scan for that code (exactly like Change4Rummy) ---
+    h5gg.clearResults();
+    h5gg.searchNumber(code, "I32", "0x0", "0x200000000");
+    h5gg.searchNearby("7", "I32", "0x4");
+
+    let count = h5gg.getResultsCount();
+    if (count <= 0) {
+      report.push(pos + " (" + code + "): no nearby results");
+      continue;
+    }
+
+    let results = h5gg.getResults(count);
+    let perPos = 0;
+    for (let j = 0; j < results.length; j++) {
+      let r = results[j];
+      if (parseInt(r.value, 10) === parseInt(code, 10)) {
+        h5gg.setValue(r.address, targetVal, "I32");
+        perPos++;
+      }
+    }
+
+    changedTotal += perPos;
+    report.push(pos + " (" + code + "): changed " + perPos);
+  }
+
+  console.log("EquipAllTeam complete. Total: " + changedTotal + "\n" + report.join("\n"));
+  alert("EquipAllTeam done.\nTarget: " + targetVal + "\nTotal changed: " + changedTotal + "\n\n" + report.join("\n"));
 }
 
 function FindCard() {
