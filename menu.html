@@ -1034,34 +1034,111 @@ const DEV2_PASSWORD = "TheMeeting";
     }
     
  function Test1() {
-  let startAddr = prompt("Enter start addr:");
-  if (startAddr === null) return;
+  const startInput = prompt(
+    "Enter starting 5-digit card value:",
+    "30306"
+  );
 
-  let val = prompt("Enter val:");
-  if (val === null) return;
+  if (startInput === null) return;
 
-  let times = prompt("Enter how many times:");
-  if (times === null) return;
+  const amountInput = prompt(
+    "How many consecutive card values should be processed?",
+    "100"
+  );
 
-  times = parseInt(times, 10);
-  if (isNaN(times) || times < 1) {
-    alert("Enter a valid number of times.");
+  if (amountInput === null) return;
+
+  const startValue = parseInt(startInput.trim(), 10);
+  const amount = parseInt(amountInput.trim(), 10);
+
+  if (!Number.isInteger(startValue) || startValue < 10000 || startValue > 99999) {
+    alert("Enter a valid 5-digit starting card value.");
     return;
   }
 
-  let addrNum = Number(startAddr);
-  if (isNaN(addrNum)) {
-    alert("Enter a valid start address.");
+  if (!Number.isInteger(amount) || amount < 1) {
+    alert("Enter an amount of at least 1.");
     return;
   }
 
-  h5gg.require(7.8);
+  const themeInput = prompt(
+    "Enter the theme value to set for every found card:",
+    "0"
+  );
 
-  for (let i = 0; i < times; i++) {
-    let currentAddr = "0x" + addrNum.toString(16);
-    h5gg.setValue(currentAddr, String(val), "I32");
-    addrNum += 0x190;
+  if (themeInput === null) return;
+
+  const targetTheme = parseInt(themeInput.trim(), 10);
+
+  if (!Number.isInteger(targetTheme)) {
+    alert("Enter a valid theme value.");
+    return;
   }
+
+  h5gg.require("7.8");
+
+  let cardsFound = 0;
+  let themesChanged = 0;
+  let noResultCards = [];
+
+  for (let i = 0; i < amount; i++) {
+    const cardValue = startValue + i;
+
+    h5gg.clearResults();
+
+    // Find the 5-digit card value, with the expected 7 nearby at +0x4.
+    h5gg.searchNumber(String(cardValue), "I32", "0x0", "0x200000000");
+    h5gg.searchNearby("7", "I32", "0x4");
+
+    const count = h5gg.getResultsCount();
+
+    if (count <= 0) {
+      noResultCards.push(cardValue);
+      continue;
+    }
+
+    const results = h5gg.getResults(count);
+    let changedThisCard = false;
+
+    for (const result of results) {
+      // Prevent changing any nearby result that is not the actual card ID.
+      if (parseInt(result.value, 10) !== cardValue) continue;
+
+      const themeAddr =
+        "0x" + (BigInt(result.address) + 0x18n).toString(16);
+
+      h5gg.setValue(themeAddr, String(targetTheme), "I32");
+
+      themesChanged++;
+      changedThisCard = true;
+
+      console.log(
+        "Theme changed:",
+        cardValue,
+        "theme address:",
+        themeAddr,
+        "new theme:",
+        targetTheme
+      );
+    }
+
+    if (changedThisCard) {
+      cardsFound++;
+    } else {
+      noResultCards.push(cardValue);
+    }
+  }
+
+  const endValue = startValue + amount - 1;
+
+  alert(
+    "Change Themes complete.\n\n" +
+    `Card range: ${startValue} - ${endValue}\n` +
+    `Theme value set: ${targetTheme}\n` +
+    `Cards found: ${cardsFound}\n` +
+    `Theme addresses changed: ${themesChanged}\n` +
+    `Not found: ${noResultCards.length}`
+  );
 }
 
 
