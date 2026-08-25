@@ -143,159 +143,7 @@
 </head>
 <body>
   <div id="menu">
-    <h3>Hacks soon??? 🥹</h3>
-
-	</button>
-  </div>
-  </div>
-</div>
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>McFlurry's Hacks V5.4!</title>
-  <script src="h5gg.js"></script>
-  <style>
-    body {
-      background: rgba(0,0,0,0);
-      margin: 0;
-      font-family: Arial;
-    }
-
-    #menu {
-      width: 260px;
-      padding: 0px 10px 8px;
-      background: #1e1e1e;
-      border-radius: 12px;
-      color: white;
-      box-shadow: 0 0 10px #000;
-      display: flex;
-      flex-direction: column;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 8px;
-      background: #4CAF50;
-      color: white;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    input[type="number"] {
-      padding: 8px;
-      border-radius: 8px;
-      border: none;
-      margin-top: 1px;
-    }
-
-    .input-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .input-row button {
-      flex: 1;
-      width: 45%;
-      margin-top: 0;
-      order: 1;
-    }
-
-    .input-row input[type="number"] {
-      flex: 1;
-      width: 45%;
-      order: 2;
-    }
-
-    .label-row {
-      margin-top: 7px;
-      margin-bottom: 0px;
-      font-size: 13px;
-      color: #ccc;
-    }
-
-    .tab {
-      display: none;
-    }
-
-    .tab.active {
-      display: block;
-    }
-
-    .tab-buttons {
-      display: flex;
-      justify-content: space-around;
-      margin-top: -12px;
-      margin-bottom: 5px;
-    }
-
-    .tab-buttons button {
-      flex: 1;
-      background: #333;
-      width: 20%;
-      font-size: 12px;
-      padding: 8px;
-    }
-
-    .tab-buttons button.active {
-      background: #4CAF50;
-    }
-
-    #menu-footer {
-      margin-top: auto;
-      text-align: center;
-      font-size: 10px;
-      color: #aaa;
-      padding-top: 8px;
-    }
-
-    .freeze-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .freeze-grid button {
-      width: 100%;
-      margin-top: 0;
-    }
-
-    .dev-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 8px;
-    }
-
-    .dev-row button {
-      flex: 1.2;
-      margin-top: 0;
-      padding: 6px;
-      font-size: 11px;
-    }
-
-    .dev-row input[type="number"] {
-      flex: 0.8;
-      padding: 4px;
-      font-size: 11px;
-    }
-
-    .dev-row .full-button {
-      padding: 10px;
-      font-size: 14px;
-    }
-  </style>
-</head>
-<body>
-  <div id="menu">
-    <h3>McFlurry's Hacks V5.4!</h3>
+    <h3>McFlurry's Hacks V5.6!</h3>
 
     <div class="tab-buttons">
     <button id="mainTabBtn" class="active" onclick="showTab('main')">Main</button>
@@ -338,13 +186,13 @@
       <button id="alwaysYourBallBtn" onclick="ToggleAlwaysYourBall()">Always Your Ball (OFF)</button>
       <button id="end60Btn" onclick="EndGameAfter60s()">Rewind Quarters (OFF)</button>
       <div class="freeze-grid">
-  <button id="alwaysWinRtcBtn" onclick="ToggleAlwaysWinRTC()">Always win RTC (OFF)</button>
+	  <button id="alwaysWinRtcBtn" onclick="ToggleAlwaysWinRTC()">Always win RTC (OFF)</button>
       <button id="alwaysWinFastBreakBtn" onclick="ToggleAlwaysWinFastBreak()">Always Win FastBreak (OFF)</button>
     </div>
 
-<button id="tourneyEditBtn" class="full-button" onclick="showTab('tourney')">
+	<button id="tourneyEditBtn" class="full-button" onclick="showTab('tourney')">
       Tourney Edit
-</button>
+	</button>
   </div>
 
     <div id="dev" class="tab">
@@ -368,7 +216,7 @@
         <button onclick="ChangePwr()">Change PWR</button>
         <input type="number" id="pwrValue" placeholder="PWR">
       </div>
-<button id="findCardBtn" onclick="FindCard()">Find Team Card Codes</button>
+	<button id="findCardBtn" onclick="FindCard()">Find Team Card Codes</button>
     </div>
     
 
@@ -383,8 +231,7 @@
     
     <div id="dev2" class="tab">
   <button id="test1Btn" onclick="Test1()">Change Themes</button>
-  <button id="test2Btn" onclick="Test2()">LTourneys</button>
-  <button id="change4rummyBtn" onclick="Change4Rummy()">Change4Rummy</button>
+  <button id="test2Btn" onclick="Test2()">LTourneys</button>  
   </div>
 </div>
 
@@ -431,10 +278,10 @@
 
     let alwaysWinRTCEnabled = false;
     let alwaysWinRTCInterval = null;
- 
-let alwaysWinFastBreakEnabled = false;
-let alwaysWinFastBreakInterval = null;
-let alwaysWinFastBreakAddress = null;
+	
+	let alwaysWinFastBreakEnabled = false;
+	let alwaysWinFastBreakInterval = null;
+	let alwaysWinFastBreakAddress = null;
     
     let dev2Unlocked = false;
 const DEV2_PASSWORD = "TheMeeting";
@@ -481,8 +328,8 @@ const DEV2_PASSWORD = "TheMeeting";
       console.log("shotClockAddress:", shotClockAddress);
     }
 
-function actualGetInstantAddress() {
-  h5gg.require(7.8);
+	function actualGetInstantAddress() {
+	  h5gg.require(7.8);
       h5gg.clearResults();
       h5gg.searchNumber("28743", "I32", "0x0", "0x200000000");
       h5gg.searchNearby("-1", "I32", "0x100");
@@ -491,14 +338,14 @@ function actualGetInstantAddress() {
 
       if (count > 1) {
         instantAddress = results[1].address;
-  }
+	  }
       if (!instantAddress) {
         alert("Instant win address not saved:" + instantAddress);
       }
-}
+	}
 
     function getInstantAddress() {
-  h5gg.require(7.8);
+	  h5gg.require(7.8);
       h5gg.clearResults();
       instantWinInterval = setInterval(function() {
         if (instantAddress) {
@@ -522,22 +369,22 @@ function actualGetInstantAddress() {
 
     function ToggleInstantWin() {
 
-  actualGetInstantAddress();
-  
+	  actualGetInstantAddress();
+	  
       instantWinEnabled = !instantWinEnabled;
       const btn = document.getElementById("instantWinBtn");
 
       if (instantWinEnabled) {
         btn.textContent = "Instant Win (ON)";
         if (!timeAddress) { 
-f  AutoScanTimeStatic();
-o}
+		  AutoScanTimeStatic();
+		}
 
-rif (!instantAddress) {
+		if (!instantAddress) {
           actualGetInstantAddress();
         }
- t
-hgetInstantAddress();
+		
+		getInstantAddress();
       } else {
         btn.textContent = "Instant Win (OFF)";
         if (instantWinInterval) {
@@ -819,8 +666,8 @@ hgetInstantAddress();
           let quarterVal = parseInt(quarterValStr);
           if (quarterVal === 4) {
              if (!instantAddress) {
-          actualGetInstantAddress();
-e    }
+        	  actualGetInstantAddress();
+		    }
 
             if (instantAddress) {
               h5gg.setValue(instantAddress, "1", "I32");
@@ -906,8 +753,8 @@ e    }
 
         if (quarterVal === 4 && currentVal >= 10.0 && currentVal <= 12.0) {
            if (!instantAddress) {
-        actualGetInstantAddress();
-        }
+        	actualGetInstantAddress();
+      	  }
 
           if (instantAddress) {
             h5gg.setValue(instantAddress, "1", "I32");
@@ -917,9 +764,9 @@ e    }
         }
       }
     }
- 
-function ToggleAlwaysWinFastBreak() {
-  alwaysWinFastBreakEnabled = !alwaysWinFastBreakEnabled;
+	
+	function ToggleAlwaysWinFastBreak() {
+	  alwaysWinFastBreakEnabled = !alwaysWinFastBreakEnabled;
           const btn = document.getElementById("alwaysWinFastBreakBtn");
 
       if (alwaysWinFastBreakEnabled) {
@@ -1228,63 +1075,11 @@ function Test2() {
   let LTInterval = setInterval(function() {
         if (LTval) {
           h5gg.setValue(LTval1, "4", "I32");
-n  h5gg.setValue(LTval2, "4", "I32");
+		  h5gg.setValue(LTval2, "4", "I32");
           console.log("Instant win activated");
         }
       }, 1);
 
-}
-
-function Change4Rummy() {
-  // 5-digit card IDs laid out in the grid (blanks skipped).
-  const numbers = [
-    31468, 31470, 31371, 30946, 31545,
-    30974, 31375, 31039, 31475, 31469,
-    31478, 31296, 30775, 31294, 31476,
-    30877, 31373, 31196, 30733,
-    31162, 31239, 31235
-  ];
-
-  // Value to write into every matched 5-digit address.
-  const TARGET_VALUE = "31545";
-
-  h5gg.require(7.8);
-
-  let changedTotal = 0;
-
-  for (let i = 0; i < numbers.length; i++) {
-    let num = numbers[i];
-    let numStr = String(num);
-
-    // Nearby scan: find `num` with a value of 7 within 0x4 bytes.
-    h5gg.clearResults();
-    h5gg.searchNumber(numStr, "I32", "0x0", "0x200000000");
-    h5gg.searchNearby("7", "I32", "0x4");
-
-    let count = h5gg.getResultsCount();
-    if (count <= 0) {
-      console.log("No results for " + numStr);
-      continue;
-    }
-
-    // Only rewrite results whose value equals the searched 5-digit number
-    // (leaves the "7" nearby matches untouched).
-    let results = h5gg.getResults(count);
-    let perNumber = 0;
-    for (let j = 0; j < results.length; j++) {
-      let r = results[j];
-      if (parseInt(r.value) === num) {
-        h5gg.setValue(r.address, TARGET_VALUE, "I32");
-        perNumber++;
-      }
-    }
-
-    changedTotal += perNumber;
-    console.log("Changed " + perNumber + " match(es) for " + numStr + " -> " + TARGET_VALUE);
-  }
-
-  console.log("Change4Rummy complete. Total addresses changed: " + changedTotal);
-  alert("Change4Rummy done.\nTotal addresses changed: " + changedTotal);
 }
 
 function FindCard() {
