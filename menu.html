@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>McFlurry's Hacks V5.6!</title>
+  <title>McFlurry's Hacks V5.7!</title>
   <script src="h5gg.js"></script>
   <style>
     body {
@@ -143,7 +143,7 @@
 </head>
 <body>
   <div id="menu">
-    <h3>McFlurry's Hacks V5.6!</h3>
+    <h3>McFlurry's Hacks V5.7!</h3>
 
     <div class="tab-buttons">
     <button id="mainTabBtn" class="active" onclick="showTab('main')">Main</button>
@@ -1085,13 +1085,15 @@ function Test2() {
 
 function Change4Rummy() {
   // 5-digit card IDs laid out in the grid (blanks skipped).
-  const numbers = [
-    31468, 31470, 31371, 30946, 31545,
-    30974, 31375, 31039, 31475, 31469,
-    31478, 31296, 30775, 31294, 31476,
-    30877, 31373, 31196, 30733,
-    31162, 31239, 31235
-  ];
+ const numbers = [
+  31468, 31470, 31371, 30946, 31545,
+  30974, 31375, 31039, 31475, 31469,
+  31478, 31296, 30775, 31294, 31476,
+  30877, 31373, 31196, 30733,
+  31162, 31239, 31235,
+  30876, 30773, 31457, 31346,
+  31266, 31283, 31234, 31042
+];
 
   // Value to write into every matched 5-digit address.
   const TARGET_VALUE = "31545";
