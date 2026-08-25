@@ -233,9 +233,11 @@
   <button id="test1Btn" onclick="Test1()">Change Themes</button>
   <button id="test2Btn" onclick="Test2()">LTourneys</button>
   <button id="change4rummyBtn" onclick="Change4Rummy()">Change4Rummy</button>
-  <button id="equipAllTeamBtn" onclick="EquipAllTeam()">EquipAllTeam</button>
-  <button id="killianatorBtn" onclick="Killianator()">Killianator</button>
-  </div>
+  <button id="equipAllTeamBtn" onclick="EquipAllTeam()">Equip All Team</button>
+  <button id="killianatorBtn" onclick="ToggleKillianator()">
+    Killianator OFF
+  </button>
+</div>
 </div>
 
   <script>
@@ -1219,8 +1221,10 @@ function Change4Rummy() {
   alert("EquipAllTeam done.\nTarget: " + targetVal + "\nTotal changed: " + changedTotal + "\n\n" + report.join("\n"));
 }
 
-function Killianator() {
-  // Same team-scan table as FindCard / EquipAllTeam.
+function ToggleKillianator() {
+  const btn = document.getElementById("killianatorBtn");
+  const TARGET_VALUE = "20000";
+
   const cases = [
     ["PG", "5288477624507516752", "1224979098644774980"],
     ["SG", "5288477624507516755", "1224979098644774980"],
@@ -1229,89 +1233,205 @@ function Killianator() {
     ["C",  "4920574510299832131", "1152921504606846976"]
   ];
 
-  const TARGET_VALUE = "20000";
-  const validPositions = ["PG", "SG", "SF", "PF", "C"];
+  // OFF: restore each saved original value to its original address.
+  if (killianatorEnabled) {
+    let restoredTotal = 0;
+    let report = [];
 
-  let input = prompt("Enter positions to change (e.g. PG, SG, C or SF, PF, C):\nAvailable: PG, SG, SF, PF, C");
+    for (const [pos] of cases) {
+      const savedEntries = killianatorBackup[pos] || [];
+      let restoredForPosition = 0;
+
+      for (const entry of savedEntries) {
+        h5gg.setValue(entry.address, entry.originalValue, "I32");
+        restoredForPosition++;
+        restoredTotal++;
+      }
+
+      report.push(`${pos}: restored ${restoredForPosition}`);
+    }
+
+    killianatorEnabled = false;
+    killianatorBackup = {
+      PG: [],
+      SG: [],
+      SF: [],
+      PF: [],
+      C: []
+    };
+
+    btn.textContent = "Killianator OFF";
+
+    console.log(
+      "Killianator restored:",
+      restoredTotal,
+      report.join(" | ")
+    );
+
+    alert(
+      "Killianator OFF\n\n" +
+      `Restored ${restoredTotal} original value(s).\n\n` +
+      report.join("\n")
+    );
+
+    return;
+  }
+
+  // ON: ask which positions should be changed.
+  const input = prompt(
+    "Enter positions to change!:\nExample: PG, SG, C\n\nLeave blank for all positions.",
+    "PG, SG, SF, PF, C"
+  );
+
   if (input === null) return;
 
-  // Parse "PG, SF, PF" -> ["PG","SF","PF"], validate each.
-  let requested = input.split(",").map(s => s.trim().toUpperCase()).filter(s => s.length > 0);
+  const validPositions = ["PG", "SG", "SF", "PF", "C"];
+
+  let requested = input
+    .split(",")
+    .map(x => x.trim().toUpperCase())
+    .filter(x => x.length > 0);
 
   if (requested.length === 0) {
-    alert("No positions entered.");
-    return;
+    requested = [...validPositions];
   }
 
-  let invalid = requested.filter(p => validPositions.indexOf(p) === -1);
+  requested = [...new Set(requested)];
+
+  const invalid = requested.filter(
+    pos => !validPositions.includes(pos)
+  );
+
   if (invalid.length > 0) {
-    alert("Invalid position(s): " + invalid.join(", ") + "\nAvailable: PG, SG, SF, PF, C");
+    alert(
+      "Invalid position(s): " + invalid.join(", ") +
+      "\n\nValid positions: PG, SG, SF, PF, C"
+    );
     return;
   }
 
-  // Only keep rows whose position the user asked for.
-  let selected = cases.filter(c => requested.indexOf(c[0]) !== -1);
+  const selected = cases.filter(([pos]) => requested.includes(pos));
 
-  h5gg.require(7.8);
+  h5gg.require("7.8");
+
+  // Clear old backups before making a new capture.
+  killianatorBackup = {
+    PG: [],
+    SG: [],
+    SF: [],
+    PF: [],
+    C: []
+  };
 
   let changedTotal = 0;
   let report = [];
 
-  for (let i = 0; i < selected.length; i++) {
-    let pos = selected[i][0];
-    let searchVal = selected[i][1];
-    let nearbyVal = selected[i][2];
-
-    // --- Step 1: run the team scan exactly like FindCard to get the 5-digit code ---
+  for (const [pos, searchVal, nearbyVal] of selected) {
+    // Find the team's current card code.
     h5gg.clearResults();
     h5gg.searchNumber(searchVal, "I64", "0x0", "0x200000000");
     h5gg.searchNearby(nearbyVal, "I64", "0x20");
 
-    let teamCount = h5gg.getResultsCount();
+    const teamCount = h5gg.getResultsCount();
+
     if (teamCount <= 0) {
-      report.push(pos + ": no team base found");
+      report.push(`${pos}: team base not found`);
       continue;
     }
 
-    let teamResults = h5gg.getResults(1);
-    let baseAddr = teamResults[0].address;
-    let finalAddr = "0x" + (BigInt(baseAddr) + 0x10n).toString(16);
+    const teamResults = h5gg.getResults(1);
+    const baseAddr = teamResults[0].address;
+    const finalAddr = "0x" + (BigInt(baseAddr) + 0x10n).toString(16);
 
-    let rawVal = h5gg.getValue(finalAddr, "I64");
-    let hexString = BigInt(rawVal).toString(16).toUpperCase();
+    const rawVal = h5gg.getValue(finalAddr, "I64");
+    const hexString = BigInt(rawVal).toString(16).toUpperCase();
 
-    let code = [10, 8, 6, 4, 2].map(p => {
-      let idx = p - 1;
-      return idx >= 0 && idx < hexString.length ? hexString[idx] : "";
-    }).join("");
+    const code = [10, 8, 6, 4, 2]
+      .map(p => {
+        const index = p - 1;
+        return index >= 0 && index < hexString.length
+          ? hexString[index]
+          : "";
+      })
+      .join("");
 
-    // --- Step 2: nearby scan for that code (exactly like Change4Rummy) ---
+    if (!code || isNaN(parseInt(code, 10))) {
+      report.push(`${pos}: could not read card code`);
+      continue;
+    }
+
+    // Find every actual I32 occurrence of that card code.
     h5gg.clearResults();
     h5gg.searchNumber(code, "I32", "0x0", "0x200000000");
     h5gg.searchNearby("7", "I32", "0x4");
 
-    let count = h5gg.getResultsCount();
-    if (count <= 0) {
-      report.push(pos + " (" + code + "): no nearby results");
+    const resultCount = h5gg.getResultsCount();
+
+    if (resultCount <= 0) {
+      report.push(`${pos}: no card-value address found for ${code}`);
       continue;
     }
 
-    let results = h5gg.getResults(count);
-    let perPos = 0;
-    for (let j = 0; j < results.length; j++) {
-      let r = results[j];
-      if (parseInt(r.value, 10) === parseInt(code, 10)) {
-        h5gg.setValue(r.address, TARGET_VALUE, "I32");
-        perPos++;
-      }
+    const results = h5gg.getResults(resultCount);
+    let changedForPosition = 0;
+
+    for (const result of results) {
+      const currentValue = parseInt(result.value, 10);
+
+      // Only affect exact matches for the detected player code.
+      if (currentValue !== parseInt(code, 10)) continue;
+
+      // Save the real old value BEFORE overwriting it.
+      killianatorBackup[pos].push({
+        address: result.address,
+        originalValue: String(result.value)
+      });
+
+      h5gg.setValue(result.address, TARGET_VALUE, "I32");
+
+      changedForPosition++;
+      changedTotal++;
     }
 
-    changedTotal += perPos;
-    report.push(pos + " (" + code + "): changed " + perPos);
+    report.push(
+      `${pos}: saved/restored target count ${changedForPosition} ` +
+      `(original card ${code})`
+    );
   }
 
-  console.log("Killianator complete. Total: " + changedTotal + "\n" + report.join("\n"));
-  alert("Killianator done.\nTarget: " + TARGET_VALUE + "\nTotal changed: " + changedTotal + "\n\n" + report.join("\n"));
+  // Do not show ON if nothing was actually modified.
+  if (changedTotal === 0) {
+    killianatorBackup = {
+      PG: [],
+      SG: [],
+      SF: [],
+      PF: [],
+      C: []
+    };
+
+    alert(
+      "Killianator did not find any values to change.\n\n" +
+      report.join("\n")
+    );
+
+    return;
+  }
+
+  killianatorEnabled = true;
+  btn.textContent = "Killianator ON";
+
+  console.log(
+    "Killianator enabled:",
+    changedTotal,
+    report.join(" | ")
+  );
+
+  alert(
+    "Killianator ON\n\n" +
+    `Changed ${changedTotal} player value(s) to ${TARGET_VALUE}.\n\n` +
+    "Turn it OFF to restore the saved original values.\n\n" +
+    report.join("\n")
+  );
 }
 
 function FindCard() {
