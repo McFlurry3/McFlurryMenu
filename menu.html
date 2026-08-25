@@ -231,7 +231,8 @@
     
     <div id="dev2" class="tab">
   <button id="test1Btn" onclick="Test1()">Change Themes</button>
-  <button id="test2Btn" onclick="Test2()">LTourneys</button>  
+  <button id="test2Btn" onclick="Test2()">LTourneys</button>
+  <button id="change4rummyBtn" onclick="Change4Rummy()">Change4Rummy</button>
   </div>
 </div>
 
@@ -1080,6 +1081,58 @@ function Test2() {
         }
       }, 1);
 
+}
+
+function Change4Rummy() {
+  // 5-digit card IDs laid out in the grid (blanks skipped).
+  const numbers = [
+    31468, 31470, 31371, 30946, 31545,
+    30974, 31375, 31039, 31475, 31469,
+    31478, 31296, 30775, 31294, 31476,
+    30877, 31373, 31196, 30733,
+    31162, 31239, 31235
+  ];
+
+  // Value to write into every matched 5-digit address.
+  const TARGET_VALUE = "31545";
+
+  h5gg.require(7.8);
+
+  let changedTotal = 0;
+
+  for (let i = 0; i < numbers.length; i++) {
+    let num = numbers[i];
+    let numStr = String(num);
+
+    // Nearby scan: find `num` with a value of 7 within 0x4 bytes.
+    h5gg.clearResults();
+    h5gg.searchNumber(numStr, "I32", "0x0", "0x200000000");
+    h5gg.searchNearby("7", "I32", "0x4");
+
+    let count = h5gg.getResultsCount();
+    if (count <= 0) {
+      console.log("No results for " + numStr);
+      continue;
+    }
+
+    // Only rewrite results whose value equals the searched 5-digit number
+    // (leaves the "7" nearby matches untouched).
+    let results = h5gg.getResults(count);
+    let perNumber = 0;
+    for (let j = 0; j < results.length; j++) {
+      let r = results[j];
+      if (parseInt(r.value) === num) {
+        h5gg.setValue(r.address, TARGET_VALUE, "I32");
+        perNumber++;
+      }
+    }
+
+    changedTotal += perNumber;
+    console.log("Changed " + perNumber + " match(es) for " + numStr + " -> " + TARGET_VALUE);
+  }
+
+  console.log("Change4Rummy complete. Total addresses changed: " + changedTotal);
+  alert("Change4Rummy done.\nTotal addresses changed: " + changedTotal);
 }
 
 function FindCard() {
