@@ -234,6 +234,9 @@
   <button id="test2Btn" onclick="Test2()">LTourneys</button>
   <button id="change4rummyBtn" onclick="Change4Rummy()">Change4Rummy</button>
   <button id="equipAllTeamBtn" onclick="EquipAllTeam()">Equip All Team</button>
+  <button id="changeTeamThemeBtn" onclick="ChangeTeamTheme()">
+    Change Team Theme
+  </button>
   <button id="killianatorBtn" onclick="ToggleKillianator()">
     Killianator OFF
   </button>
@@ -1320,6 +1323,134 @@ function Change4Rummy() {
 
   console.log("EquipAllTeam complete. Total: " + changedTotal + "\n" + report.join("\n"));
   alert("EquipAllTeam done.\nTarget: " + targetVal + "\nTotal changed: " + changedTotal + "\n\n" + report.join("\n"));
+}
+
+	  function ChangeTeamTheme() {
+  const cases = [
+    ["PG", "5288477624507516752", "1224979098644774980"],
+    ["SG", "5288477624507516755", "1224979098644774980"],
+    ["SF", "5288477624507516499", "1224979098644774980"],
+    ["PF", "5288477624507516496", "1224979098644774980"],
+    ["C",  "4920574510299832131", "1152921504606846976"]
+  ];
+
+  const input = prompt("Enter theme val:", "0");
+
+  if (input === null) {
+    return;
+  }
+
+  const themeVal = parseInt(input.trim(), 10);
+
+  if (!Number.isInteger(themeVal)) {
+    alert("Enter a valid theme value.");
+    return;
+  }
+
+  h5gg.require(7.8);
+
+  let changedTotal = 0;
+  let report = [];
+
+  for (let i = 0; i < cases.length; i++) {
+    const pos = cases[i][0];
+    const searchVal = cases[i][1];
+    const nearbyVal = cases[i][2];
+
+    // Find the saved/current player code for this position.
+    h5gg.clearResults();
+    h5gg.searchNumber(searchVal, "I64", "0x0", "0x200000000");
+    h5gg.searchNearby(nearbyVal, "I64", "0x20");
+
+    const teamCount = h5gg.getResultsCount();
+
+    if (teamCount <= 0) {
+      report.push(pos + ": team base not found");
+      continue;
+    }
+
+    const teamResults = h5gg.getResults(1);
+    const baseAddr = teamResults[0].address;
+
+    // Same code extraction used by EquipAllTeam / FindCard.
+    const cardCodeAddr = "0x" + (BigInt(baseAddr) + 0x10n).toString(16);
+    const rawVal = h5gg.getValue(cardCodeAddr, "I64");
+
+    let hexString;
+
+    try {
+      hexString = BigInt(rawVal).toString(16).toUpperCase();
+    } catch (error) {
+      report.push(pos + ": could not read card code");
+      continue;
+    }
+
+    const cardCode = [10, 8, 6, 4, 2]
+      .map(function (p) {
+        const index = p - 1;
+        return index >= 0 && index < hexString.length ? hexString[index] : "";
+      })
+      .join("");
+
+    if (!cardCode || isNaN(parseInt(cardCode, 10))) {
+      report.push(pos + ": invalid card code");
+      continue;
+    }
+
+    // Find every actual occurrence of this card ID.
+    h5gg.clearResults();
+    h5gg.searchNumber(cardCode, "I32", "0x0", "0x200000000");
+    h5gg.searchNearby("7", "I32", "0x4");
+
+    const resultCount = h5gg.getResultsCount();
+
+    if (resultCount <= 0) {
+      report.push(pos + " (" + cardCode + "): card address not found");
+      continue;
+    }
+
+    const results = h5gg.getResults(resultCount);
+
+    let changedForPosition = 0;
+
+    for (let j = 0; j < results.length; j++) {
+      const result = results[j];
+
+      // Do not alter the nearby 7 result—only exact card-code addresses.
+      if (parseInt(result.value, 10) !== parseInt(cardCode, 10)) {
+        continue;
+      }
+
+      // Theme value lives at card-ID address + 0x18.
+      const themeAddr = "0x" + (BigInt(result.address) + 0x18n).toString(16);
+
+      h5gg.setValue(themeAddr, String(themeVal), "I32");
+
+      changedForPosition++;
+      changedTotal++;
+
+      console.log(
+        pos +
+        " | Card: " + cardCode +
+        " | Theme address: " + themeAddr +
+        " | Theme set to: " + themeVal
+      );
+    }
+
+    report.push(
+      pos +
+      " (" + cardCode + "): changed " +
+      changedForPosition +
+      " theme address(es)"
+    );
+  }
+
+  alert(
+    "Change Team Theme complete.\n\n" +
+    "Theme value: " + themeVal + "\n" +
+    "Total addresses changed: " + changedTotal + "\n\n" +
+    report.join("\n")
+  );
 }
 
 function ToggleKillianator() {
