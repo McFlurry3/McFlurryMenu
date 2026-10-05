@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>McFlurry's Hacks V5.9!</title>
+  <title>McFlurry's Hacks V6!</title>
   <script src="h5gg.js"></script>
   <style>
     body {
@@ -143,7 +143,7 @@
 </head>
 <body>
   <div id="menu">
-    <h3>McFlurry's Hacks V5.9!</h3>
+    <h3>McFlurry's Hacks V6!</h3>
 
     <div class="tab-buttons">
     <button id="mainTabBtn" class="active" onclick="showTab('main')">Main</button>
@@ -1145,14 +1145,28 @@ const DEV2_PASSWORD = "TheMeeting";
 
 
 function Test2() {
-  
   h5gg.require(7.8);
   h5gg.clearResults();
 
-  h5gg.searchNumber("1115285573", "I32", "0x0", "0x200000000");
-  h5gg.searchNearby("59", "I32", "0x100");
+  let input = prompt("RoundNum?:", "4");
+
+  if (input === null) {
+    console.log("Cancelled");
+    return;
+  }
+
+  let roundNum = parseInt(input, 10);
+
+  if (isNaN(roundNum)) {
+    console.log("Invalid round number");
+    return;
+  }
+
+  h5gg.searchNumber("1115295955", "I32", "0x0", "0x200000000");
+  h5gg.searchNearby("61", "I32", "0x100");
 
   let count = h5gg.getResultsCount();
+
   if (count <= 0) {
     console.log("Nothing found");
     return;
@@ -1160,18 +1174,18 @@ function Test2() {
 
   let results = h5gg.getResults(count);
   let LTval = results[0].address;
-  
+
   let LTval1 = "0x" + (Number(LTval) + 0x8).toString(16);
   let LTval2 = "0x" + (Number(LTval) + 0xC).toString(16);
-  
-  let LTInterval = setInterval(function() {
-        if (LTval) {
-          h5gg.setValue(LTval1, "4", "I32");
-		  h5gg.setValue(LTval2, "4", "I32");
-          console.log("Instant win activated");
-        }
-      }, 1);
 
+  let LTInterval = setInterval(function () {
+    if (LTval) {
+      h5gg.setValue(LTval1, String(roundNum), "I32");
+      h5gg.setValue(LTval2, String(roundNum), "I32");
+
+      console.log("Round set to: " + roundNum);
+    }
+  }, 1);
 }
 
 function Change4Rummy() {
