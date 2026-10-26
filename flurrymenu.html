@@ -1108,7 +1108,7 @@ const DEV2_PASSWORD = "TheMeeting";
       if (parseInt(result.value, 10) !== cardValue) continue;
 
       const themeAddr =
-        "0x" + (BigInt(result.address) + 0x18n).toString(16);
+        "0x" + (BigInt(result.address) + 0x14).toString(16);
 
       h5gg.setValue(themeAddr, String(targetTheme), "I32");
 
