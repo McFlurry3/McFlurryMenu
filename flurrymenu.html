@@ -1071,6 +1071,14 @@ const DEV2_PASSWORD = "TheMeeting";
 
   if (themeInput === null) return;
 
+
+  const seasonInput = prompt(
+    "Enter the season value to search for every found card:",
+    "0"
+  );
+
+  if (themeInput === null) return;
+
   const targetTheme = parseInt(themeInput.trim(), 10);
 
   if (!Number.isInteger(targetTheme)) {
@@ -1091,7 +1099,7 @@ const DEV2_PASSWORD = "TheMeeting";
 
     // Find the 5-digit card value, with the expected 7 nearby at +0x4.
     h5gg.searchNumber(String(cardValue), "I32", "0x0", "0x200000000");
-    h5gg.searchNearby("7", "I32", "0x4");
+    h5gg.searchNearby(seasonInput, "I32", "0x4");
 
     const count = h5gg.getResultsCount();
 
